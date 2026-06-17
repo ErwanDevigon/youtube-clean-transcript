@@ -1,0 +1,13 @@
+[project]
+name = "youtube-clean-transcript"
+version = "0.1.0"
+description = "Outil pour obtenir un transcript propre d'une vidéo YouTube"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "yt-dlp",
+    "youtube-transcript-api",
+][project.scripts]
+youtube-transcript = "youtube_transcript.main:main"[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
