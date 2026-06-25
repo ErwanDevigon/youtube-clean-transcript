@@ -1,35 +1,91 @@
 # YouTube Clean Transcript
 
-Outil Python simple et propre pour récupérer un **transcript bien formaté** (sous-titres auto ou manuels) d’une vidéo YouTube.
+A clean and simple Python tool to download **well-formatted transcripts** (auto-generated or manual subtitles) from any YouTube video.
+
+---
+
+## Features
+
+- Automatically fetches the video title
+- Downloads the transcript with priority: English → French → others
+- Cleans and formats the text nicely
+- Saves both a clean `.txt` version and a raw JSON version
+- Creates a lightweight `_info.json` with video metadata (URL, ID, title, date…)
+- Friendly command-line interface with alias support
+
+---
 
 ## Installation
 
 ```bash
+# 1. Clone the repository
 git clone https://github.com/ErwanDevigon/youtube-clean-transcript.git
+
+# 2. Create virtual environment and install
 cd youtube-clean-transcript
+python3 -m venv venv
+source venv/bin/activate
+
 pip install -r requirements.txt
+pip install -e .
 ```
 
-## Utilisation
+---
 
-**Méthode recommandée** (depuis la racine du projet) :
+## Usage
 
 ```bash
-python -m youtube_transcript.main --url "https://www.youtube.com/watch?v=..."
+# Interactive mode
+getyt
+
+# Direct URL
+getyt https://youtu.be/v4F1gFy-hqg
+
+# Specify output folder
+getyt https://youtu.be/v4F1gFy-hqg --output ~/MyTranscripts
 ```
 
-Ou directement :
+## Recommended Alias
+
+Add this to your `~/.zshrc` or `~/.bash_aliases`:
 
 ```bash
-cd src/youtube_transcript
-python main.py
+getyt() {
+    local project_dir="$HOME/Projets/youtube-clean-transcript"
+    
+    # Check if venv exists
+    if [[ ! -d "$project_dir/venv" ]]; then
+        echo "❌ Virtual environment not found for youtube-clean-transcript."
+        echo "   Please create it with:"
+        echo "   cd $project_dir && python3 -m venv venv && source venv/bin/activate && pip install -e ."
+        return 1
+    fi
+
+    # Run in a clean subshell
+    (
+        cd "$project_dir"
+        source venv/bin/activate
+        youtube-transcript "$@"
+    )
+}
 ```
 
-## Fonctionnalités
-- Récupère automatiquement le titre de la vidéo
-- Télécharge le transcript (priorité : anglais → français)
-- Nettoie le texte et le sauvegarde dans un fichier `.txt` avec un nom propre
-- Gestion des erreurs claire
+> After adding the alias, run `source ~/.zshrc` (or `source ~/.bash_aliases`) or restart your terminal.
 
-## Auteur
-**ErwanDevigon**
+---
+
+## Output Files
+
+For each video, the tool creates:
+
+- `{title}.txt` — Clean, readable transcript with header
+- `{title}_raw.json` — Complete raw transcript (with timestamps)
+- `{title}_info.json` — Video metadata (URL, ID, title, download date…)
+
+---
+
+## Author
+
+**Erwan Devigon**
+
+---
